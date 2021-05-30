@@ -30,7 +30,7 @@ set shiftwidth=2
 " do not wrap long lines by default
 set nowrap
 
-" Mouse support 
+" Mouse support, mostly neovide or just to be lazy 
 set mouse=a
 
 " Updatetime
@@ -127,8 +127,10 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
+"line numbers
 set nu
 
+" Old configs TODO: remove
 " Configure LSP
 " https://github.com/neovim/nvim-lspconfig#rust_analyzer
 " lua <<EOF
@@ -141,6 +143,7 @@ set nu
 "--    require'completion'.on_attach(client)
 "--end
 
+"built in lua configs
 lua << EOF
 require('gitsigns').setup()
 
@@ -215,7 +218,7 @@ imap <S-Tab> <Plug>(completion_smart_s_tab)
 " Blame Git remmap
 nnoremap <silent> <leader>b :ToggleBlameLine<CR>
 
-
+" old lsp configs TODO: remove
 " Code navigation shortcuts
 "nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 "nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
@@ -239,10 +242,10 @@ set updatetime=300
 autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
 
 " Goto previous/next diagnostic warning/error
-nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+" nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+" nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
-nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
+" nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
@@ -252,7 +255,7 @@ nnoremap <silent> <A-Right> :tabm +1<CR>
 " Enable true color `support
 set termguicolors
 
-" Theme
+" Old Theme
 " colorscheme desert
 
 " enable file extension pattern matching glyphs on folder/directory (disabled by default with 0)
@@ -265,7 +268,6 @@ let g:DevIconsEnableFolderExtensionPatternMatching = 0
 " Load the colorsheme
 colorscheme moonlight
 
-" highlight Directory ctermfg=red
 
 " ============================================================================ "
 " ===                                NEOVIDE                             === "
@@ -273,20 +275,3 @@ colorscheme moonlight
 let g:neovide_cursor_vfx_mode = "torpedo" 
 
 
-" ============================================================================ "
-
-" ===                                STATUSBAR                             === "
-" ============================================================================ "
-
-"
-"set statusline=
-"set statusline+=%#PmenuSel#
-"set statusline+=%{StatuslineGit()}
-"set statusline+=%#LineNr#
-"set statusline+=\ %f
-"set statusline+=%m\
-"set statusline+=%=
-"set statusline+=%#CursorColumn#
-"set statusline+=\ %y
-"set statusline+=%{&fileformat}
-"set statusline+=\ %p%%
