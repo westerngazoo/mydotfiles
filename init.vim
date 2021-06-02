@@ -1,12 +1,11 @@
 
-
 " Fish doesn't play all that well with others
 set shell=/bin/bash
 let mapleader = "\<Space>"
 
 " For the FiraCode font support
 set guifont=font:hsize
-set guifont=Hack\ Nerd\ Font:h19
+set guifont=Hack\ Nerd\ Font:h13
 
 " Search
 map <leader>h :%s///<left><left>
@@ -52,18 +51,27 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'preservim/nerdcommenter'
 
+" Sorround(sandwich) words and pairs
 Plug 'jiangmiao/auto-pairs'
 Plug 'machakann/vim-sandwich'
 
-" Git Pluggins
+" Search with ripgrep
+Plug 'jremmen/vim-ripgrep'
 
+"Debug
+Plug 'puremourning/vimspector'
+
+" Git Pluggins
 " visual enhancements git
 Plug 'tveskag/nvim-blame-line'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 
-" Moonlight theme
+" Themes
 Plug 'shaunsingh/moonlight.nvim'
+Plug 'ayu-theme/ayu-vim'
+Plug 'sainnhe/sonokai'
+Plug 'joshdick/onedark.vim'
 
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
@@ -97,6 +105,9 @@ Plug 'andymass/vim-matchup'
 Plug 'airblade/vim-rooter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
@@ -142,6 +153,9 @@ set nu
 "--local on_attach = function(client)
 "--    require'completion'.on_attach(client)
 "--end
+" Use completion-nvim in every buffer
+autocmd BufEnter * lua require'completion'.on_attach()
+
 
 "built in lua configs
 lua << EOF
@@ -171,6 +185,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
 
   --Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -220,32 +235,32 @@ nnoremap <silent> <leader>b :ToggleBlameLine<CR>
 
 " old lsp configs TODO: remove
 " Code navigation shortcuts
-"nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-"nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-"nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-"nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-"nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-"nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-"nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-"nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-"nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
 " Enable type inlay hints
-autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *
-\ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
+ autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *
+ \ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
 
 
 " Set updatetime for CursorHold
 " 300ms of no cursor movement to trigger CursorHold
 set updatetime=300
 " Show diagnostic popup on cursor hold
-autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
+ autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
 
 " Goto previous/next diagnostic warning/error
-" nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-" nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+ nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+ nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
-" nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
+ nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
@@ -253,25 +268,61 @@ nnoremap <silent> <A-Left> :tabm -1<CR>
 nnoremap <silent> <A-Right> :tabm +1<CR>
 
 " Enable true color `support
-set termguicolors
+" Important!!
+if has('termguicolors')
+   set termguicolors
+endif
+"let ayucolor="light"  " for light version of theme
+"let ayucolor="mirage" " for mirage version of theme
+"let ayucolor="dark"   " for dark version of theme
+"let g:sonokai_style = 'andromeda'
+colorscheme onedark
 
-" Old Theme
-" colorscheme desert
+"colorscheme sonokai
 
 " enable file extension pattern matching glyphs on folder/directory (disabled by default with 0)
 let g:DevIconsEnableFolderExtensionPatternMatching = 0
 
 
-" ============================================================================ "
-" ===                               MOONLIGHT 
-" ============================================================================ "
-" Load the colorsheme
-colorscheme moonlight
-
-
-" ============================================================================ "
-" ===                                NEOVIDE                             === "
-" ============================================================================ "
+" NEOVIDE
 let g:neovide_cursor_vfx_mode = "torpedo" 
 
+set laststatus=2
+set statusline+=%F
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline_powerline_fonts = 1
+let g:airline_theme='onedark'
 
+"debugging
+nnoremap <leader>da :call vimspector#Launch()<CR>
+nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
+nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
+nnoremap <leader>dw :call GotoWindow(g:vimspector_session_windows.watches)<CR>
+nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<CR>
+nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
+nnoremap <leader>di :call AddToWatch()<CR>
+nnoremap <leader>dx :call vimspector#Reset()<CR>
+nnoremap <leader>dX :call vimspector#ClearBreakpoints()<CR>
+nnoremap <S-k> :call vimspector#StepOut()<CR>
+nnoremap <S-l> :call vimspector#StepInto()<CR>
+nnoremap <S-j> :call vimspector#StepOver()<CR>
+nnoremap <leader>d_ :call vimspector#Restart()<CR>
+nnoremap <leader>dn :call vimspector#Continue()<CR>
+nnoremap <leader>drc :call vimspector#RunToCursor()<CR>
+nnoremap <leader>dh :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <leader>de :call vimspector#ToggleConditionalBreakpoint()<CR>
+
+"terminal
+" open new split panes to right and below
+set splitright
+set splitbelow
+" turn terminal to normal mode with escape
+tnoremap <Esc> <C-\><C-n>
+" start terminal in insert mode
+au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+" open terminal on ctrl+n
+function! OpenTerminal()
+  split term://bash
+  resize 10
+endfunction
+nnoremap <c-n> :call OpenTerminal()<CR>
