@@ -60,12 +60,15 @@ Plug 'jremmen/vim-ripgrep'
 
 "Debug
 Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
 
 " Git Pluggins
 " visual enhancements git
 Plug 'tveskag/nvim-blame-line'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'tpope/vim-fugitive'
+
 
 " Themes
 Plug 'shaunsingh/moonlight.nvim'
@@ -312,6 +315,11 @@ nnoremap <leader>drc :call vimspector#RunToCursor()<CR>
 nnoremap <leader>dh :call vimspector#ToggleBreakpoint()<CR>
 nnoremap <leader>de :call vimspector#ToggleConditionalBreakpoint()<CR>
 
+" vim maximizer comes in handy with the debugger
+nnoremap <silent><F3> :MaximizerToggle<CR>
+vnoremap <silent><F3> :MaximizerToggle<CR>gv
+inoremap <silent><F3> <C-o>:MaximizerToggle<CR>
+
 "terminal
 " open new split panes to right and below
 set splitright
@@ -326,3 +334,19 @@ function! OpenTerminal()
   resize 10
 endfunction
 nnoremap <c-n> :call OpenTerminal()<CR>
+
+"to search for visually selected a word just press *
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
+
+"This unsets the last search pattern register by hitting return
+nnoremap <leader>e :noh<CR><CR>
+
+" pretty print JSON
+nnoremap <leader>ppj :%!python -m json.tool<CR><CR>
+
+" Fugitive Conflict Resolution
+nnoremap <leader>gd :Gvdiffsplit!<CR>
+nnoremap gdh :diffget //2<CR>
+nnoremap gdl :diffget //3<CR>
+
+
