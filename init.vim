@@ -5,7 +5,7 @@ let mapleader = "\<Space>"
 
 " For the FiraCode font support
 set guifont=font:hsize
-set guifont=Hack\ Nerd\ Font:h13
+set guifont=Hack\ Nerd\ Font:h12
 
 " Search
 map <leader>h :%s///<left><left>
@@ -279,9 +279,9 @@ endif
 "let ayucolor="mirage" " for mirage version of theme
 "let ayucolor="dark"   " for dark version of theme
 "let g:sonokai_style = 'andromeda'
-colorscheme onedark
+"colorscheme onedark
 
-"colorscheme sonokai
+colorscheme moonlight
 
 " enable file extension pattern matching glyphs on folder/directory (disabled by default with 0)
 let g:DevIconsEnableFolderExtensionPatternMatching = 0
@@ -296,7 +296,7 @@ let g:airline#extensions#tabline#formatter = 'default'
 let g:airline_powerline_fonts = 1
 let g:airline_theme='onedark'
 
-"debugging
+"debugging'2021-02-15T06:00:00.000Z
 nnoremap <leader>da :call vimspector#Launch()<CR>
 nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
 nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
@@ -345,8 +345,8 @@ nnoremap <leader>e :noh<CR><CR>
 nnoremap <leader>ppj :%!python -m json.tool<CR><CR>
 
 " Fugitive Conflict Resolution
-nnoremap <leader>gd :Gvdiffsplit!<CR>
-nnoremap gdh :diffget //2<CR>
-nnoremap gdl :diffget //3<CR>
+nnoremap <leader>gtr :Gvdiffsplit!<CR>
+nnoremap grh :diffget //2<CR>
+nnoremap grl :diffget //3<CR>
 
 
